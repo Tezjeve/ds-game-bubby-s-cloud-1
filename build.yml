@@ -1,0 +1,33 @@
+name: Build Nintendo DS .nds File
+
+on:
+  push:
+    branches:
+      - main  # Deze workflow wordt uitgevoerd wanneer er wijzigingen naar de 'main' branch worden gepusht
+  pull_request:
+    branches:
+      - main  # Ook bij pull requests
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Gebruik de laatste Ubuntu-versie voor de build omgeving
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install devkitPro
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+          sudo apt-get install -y libnds-dev
+
+      - name: Compile .nds file
+        run: |
+          make
+
+      - name: Upload .nds file as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: mygame.nds
+          path: mygame.nds
